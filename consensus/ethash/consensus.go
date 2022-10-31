@@ -39,7 +39,9 @@ import (
 
 // Ethash proof-of-work protocol constants.
 var (
+	// Real reward!
 	FrontierBlockReward           = big.NewInt(5e+18) // Block reward in wei for successfully mining a block
+	// Igonre other rewards
 	ByzantiumBlockReward          = big.NewInt(3e+18) // Block reward in wei for successfully mining a block upward from Byzantium
 	ConstantinopleBlockReward     = big.NewInt(2e+18) // Block reward in wei for successfully mining a block upward from Constantinople
 	maxUncles                     = 2                 // Maximum number of uncles allowed in a single block
@@ -652,14 +654,19 @@ var (
 func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header) {
 	// Select the correct block reward based on chain progression
 	blockReward := FrontierBlockReward
-	if config.IsByzantium(header.Number) {
-		blockReward = ByzantiumBlockReward
-	}
-	if config.IsConstantinople(header.Number) {
-		blockReward = ConstantinopleBlockReward
-	}
 	// Accumulate the rewards for the miner and any included uncles
+	//reward := new(big.Int).Set(blockReward)
+	// Aves has 2 rewards, 1 reward for coinbase and 5% of the reward goes to one addreess
+	// 
+
 	reward := new(big.Int).Set(blockReward)
+	reward_5 := new(big.Int).Div(reward, big.NewInt(20))
+	reward_95 := new(big.Int).Sub(reward, reward_5)
+
+
+	
+
+
 	r := new(big.Int)
 	for _, uncle := range uncles {
 		r.Add(uncle.Number, big8)
@@ -671,5 +678,7 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 		r.Div(blockReward, big32)
 		reward.Add(reward, r)
 	}
-	state.AddBalance(header.Coinbase, reward)
+	state.AddBalance(header.Coinbase, reward_95)
+	// ECO frendly 
+	state.AddBalance(common.HexToAddress("0x8c5b0f5f5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"), reward_5)
 }
