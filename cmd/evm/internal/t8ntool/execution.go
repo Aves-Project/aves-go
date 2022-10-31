@@ -253,6 +253,7 @@ func (pre *Prestate) Apply(vmConfig vm.Config, chainConfig *params.ChainConfig,
 			statedb.AddBalance(ommer.Address, reward)
 		}
 		statedb.AddBalance(pre.Env.Coinbase, minerReward)
+		// AVES TODO! // ADD ECO REWARD!
 	}
 	// Commit block
 	root, err := statedb.Commit(chainConfig.IsEIP158(vmContext.BlockNumber))
