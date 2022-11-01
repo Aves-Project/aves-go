@@ -22,7 +22,7 @@ import "github.com/ethereum/go-ethereum/common"
 // the main Ethereum network.
 var MainnetBootnodes = []string{
 	// Aves Foundation Go Bootnodes
-	"enode://d860a01f9722d78051619d1e2351aba3f43f943f6f00718d1b9baa4101932a1f5011f16bb2b1bb35db20d6fe28fa0bf09636d26a87d31de9ec6203eeedb1f666@18.138.108.67:30303",   // bootnode-aws-ap-southeast-1-001
+	"enode://9cec2b62622f019e3b1971e532b300020d89d8b984da0e78a45f5807abb4cf581678bb9f0cfbb867fa5a821d0f3fe0b93088b3b803eae81652b856c90d227daa@127.0.0.1:30330",  
 }
 
 
@@ -39,9 +39,9 @@ func KnownDNSNetwork(genesis common.Hash, protocol string) string {
 	var net string
 	switch genesis {
 	case MainnetGenesisHash:
-		net = "mainnet"
+		net = "aves"
 	default:
 		return ""
 	}
-	return dnsPrefix + protocol + "." + net + ".ethdisco.net"
+	return net
 }

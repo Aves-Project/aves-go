@@ -464,12 +464,12 @@ func makeFullNode(genesis *core.Genesis) (*node.Node, *eth.Ethereum, *ethcatalys
 	datadir, _ := os.MkdirTemp("", "")
 
 	config := &node.Config{
-		Name:    "geth",
+		Name:    "avesgo",
 		Version: params.Version,
 		DataDir: datadir,
 		P2P: p2p.Config{
 			ListenAddr:  "0.0.0.0:0",
-			NoDiscovery: true,
+			NoDiscovery: false,
 			MaxPeers:    25,
 		},
 		UseLightweightKDF: true,

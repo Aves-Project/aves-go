@@ -2014,8 +2014,7 @@ func SetDNSDiscoveryDefaults(cfg *ethconfig.Config, genesis common.Hash) {
 		protocol = "les"
 	}
 	if url := params.KnownDNSNetwork(genesis, protocol); url != "" {
-		cfg.EthDiscoveryURLs = []string{url}
-		cfg.SnapDiscoveryURLs = cfg.EthDiscoveryURLs
+
 	}
 }
 
