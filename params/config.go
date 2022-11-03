@@ -39,10 +39,6 @@ var (
 // the chain it belongs to.
 var TrustedCheckpoints = map[common.Hash]*TrustedCheckpoint{
 	MainnetGenesisHash: MainnetTrustedCheckpoint,
-	RopstenGenesisHash: RopstenTrustedCheckpoint,
-	SepoliaGenesisHash: SepoliaTrustedCheckpoint,
-	RinkebyGenesisHash: RinkebyTrustedCheckpoint,
-	GoerliGenesisHash:  GoerliTrustedCheckpoint,
 }
 
 // CheckpointOracles associates each known checkpoint oracles with the genesis hash of
@@ -84,6 +80,7 @@ var (
 	// MainnetTrustedCheckpoint contains the light client trusted checkpoint for the main network.
 	MainnetTrustedCheckpoint = &TrustedCheckpoint{
 		SectionIndex: 0,
+
 	}
 
 	// MainnetCheckpointOracle contains a set of configs for the main network oracle.
@@ -92,7 +89,7 @@ var (
 		Signers: []common.Address{
 			common.HexToAddress("0x1b2S260efc720BE89101890E4Db589b44E950527"), // RAND
 		},
-		Threshold: 2,
+		Threshold: 0,
 	}
 
 	// RopstenChainConfig contains the chain parameters to run a node on the Ropsten test network.

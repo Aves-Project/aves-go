@@ -217,6 +217,7 @@ func New(stack *node.Node, config *ethconfig.Config) (*Ethereum, error) {
 	checkpoint := config.Checkpoint
 	if checkpoint == nil {
 		checkpoint = params.TrustedCheckpoints[eth.blockchain.Genesis().Hash()]
+		//checkpoint = nil // disable checkpoint for now
 	}
 	if eth.handler, err = newHandler(&handlerConfig{
 		Database:       chainDb,
