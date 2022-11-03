@@ -40,7 +40,8 @@ import (
 // Ethash proof-of-work protocol constants.
 var (
 	// Real reward!
-	FrontierBlockReward           = big.NewInt(5e+18) // Block reward in wei for successfully mining a block
+	// reward 125 av
+	FrontierBlockReward           = big.NewInt(1250000000000000000) // Block reward in wei for successfully mining a block
 	// Igonre other rewards
 	ByzantiumBlockReward          = big.NewInt(3e+18) // Block reward in wei for successfully mining a block upward from Byzantium
 	ConstantinopleBlockReward     = big.NewInt(2e+18) // Block reward in wei for successfully mining a block upward from Constantinople

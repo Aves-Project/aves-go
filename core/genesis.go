@@ -523,14 +523,17 @@ func (g *Genesis) MustCommit(db ethdb.Database) *types.Block {
 }
 
 // DefaultGenesisBlock returns the Ethereum main net genesis block.
+// AVES GENESIS
 func DefaultGenesisBlock() *Genesis {
 	return &Genesis{
 		Config:     params.MainnetChainConfig,
-		Nonce:      66,
-		ExtraData:  hexutil.MustDecode("0x11bbe8db4e347b4e8c937c1c8370e4b5ed33adb3db69cbdb7a38e1e50b1b82fa"),
+		Nonce:      0,
 		GasLimit:   5000,
-		Difficulty: big.NewInt(17179869184),
-		Alloc:      decodePrealloc(mainnetAllocData),
+		Difficulty: big.NewInt(0),
+		// addr 0xd9c9cd5f6779558b6e0ed4e6acf6b1947e7fa1f3
+		Alloc: map[common.Address]GenesisAccount{
+			common.BytesToAddress([]byte{1}): {Balance: big.NewInt(1)}, // tODO AVES
+		},
 	}
 }
 
@@ -635,3 +638,14 @@ func decodePrealloc(data string) GenesisAlloc {
 	}
 	return ga
 }
+// EXAMPLE output:
+// {
+//   "config": {
+//     "chainId": 1,
+//     "homesteadBlock": 0,
+//     "eip150Block": 0,
+//     "eip155Block": 0,
+//     "eip158Block": 0,
+//     "byzantiumBlock": 0,
+
+

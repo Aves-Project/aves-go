@@ -1162,9 +1162,6 @@ func (s *skeleton) Bounds() (head *types.Header, tail *types.Header, err error) 
 	// checks to avoid crashing if a programming error happens. These should not
 	// happen in live code.
 	status := rawdb.ReadSkeletonSyncStatus(s.db)
-	if len(status) == 0 {
-		return nil, nil, errors.New("beacon sync not yet started")
-	}
 	progress := new(skeletonProgress)
 	if err := json.Unmarshal(status, progress); err != nil {
 		return nil, nil, err

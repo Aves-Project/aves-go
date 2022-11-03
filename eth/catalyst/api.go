@@ -680,9 +680,9 @@ func (api *ConsensusAPI) heartbeat() {
 					eta = time.Duration(new(big.Int).Div(left, new(big.Int).SetUint64(growth+1)).Uint64()) * time.Second
 				}
 			}
-			message := "Merge is configured, but previously seen beacon client is offline. Please ensure it is operational before the transition arrives!"
+			message := "AVES NETWORK"
 			if lastTransitionUpdate.IsZero() {
-				message = "Merge is configured, but no beacon client seen. Please ensure you have one available before the transition arrives!"
+				message = "AVES NETWORK"
 			}
 			if eta < time.Second {
 				log.Warn(message)

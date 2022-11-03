@@ -27,7 +27,7 @@ import (
 
 // Genesis hashes to enforce below configs on.
 var (
-	MainnetGenesisHash = common.HexToHash("0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3")
+	MainnetGenesisHash = common.HexToHash("0x02b280b9741793e1194e8a5dd5b4f64dfad5d935f0d956181953536e98099c96")
 	RopstenGenesisHash = common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d")
 	SepoliaGenesisHash = common.HexToHash("0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9")
 	RinkebyGenesisHash = common.HexToHash("0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177")
@@ -55,18 +55,30 @@ var CheckpointOracles = map[common.Hash]*CheckpointOracleConfig{
 }
 
 var (
-	MainnetTerminalTotalDifficulty, _ = new(big.Int).SetString("0", 0)
+	MainnetTerminalTotalDifficulty, _ = new(big.Int).SetString("50_000_000_000_000_000", 10)
 
 	// AVES TEST NET
 	// MainnetChainConfig is the chain parameters to run a node on the main network.
 	MainnetChainConfig = &ChainConfig{
 		ChainID:                       big.NewInt(33333),
 		HomesteadBlock:                big.NewInt(0),
+		EIP150Block:                   big.NewInt(0),
+		EIP150Hash:                    common.HexToHash("0x02b280b9741793e1194e8a5dd5b4f64dfad5d935f0d956181953536e98099c96"),
+		EIP155Block:                   big.NewInt(0),
+		EIP158Block:                   big.NewInt(0),
+		ByzantiumBlock:                big.NewInt(0),
+		ConstantinopleBlock:           big.NewInt(0),
+		PetersburgBlock:               big.NewInt(0),
+		IstanbulBlock:                 big.NewInt(0),
+		MuirGlacierBlock:              big.NewInt(0),
+		BerlinBlock:                   big.NewInt(0),
+		LondonBlock:                   big.NewInt(0),
 		DAOForkBlock:                  nil,
 		DAOForkSupport:                false,
-		TerminalTotalDifficulty:       nil,
+		TerminalTotalDifficulty:       big.NewInt(50_000_000_000_000_000),
 		TerminalTotalDifficultyPassed: false,
 		Ethash:                        new(EthashConfig),
+
 	}
 
 	// MainnetTrustedCheckpoint contains the light client trusted checkpoint for the main network.
