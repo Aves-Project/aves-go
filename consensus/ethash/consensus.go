@@ -40,8 +40,8 @@ import (
 // Ethash proof-of-work protocol constants.
 var (
 	// Real reward!
-	// reward 125 av
-	FrontierBlockReward           = big.NewInt(1250000000000000000) // Block reward in wei for successfully mining a block
+	// reward 125 aves = 125 + 18 decimals
+	FrontierBlockReward           = new(big.Int).Mul(big.NewInt(125), big.NewInt(1e+18)) // Block reward in wei for successfully mining a block
 	// Igonre other rewards
 	ByzantiumBlockReward          = big.NewInt(3e+18) // Block reward in wei for successfully mining a block upward from Byzantium
 	ConstantinopleBlockReward     = big.NewInt(2e+18) // Block reward in wei for successfully mining a block upward from Constantinople
@@ -658,15 +658,11 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 	// Accumulate the rewards for the miner and any included uncles
 	//reward := new(big.Int).Set(blockReward)
 	// Aves has 2 rewards, 1 reward for coinbase and 5% of the reward goes to one addreess
-	// 
+	// ADD helving?
 
 	reward := new(big.Int).Set(blockReward)
 	reward_5 := new(big.Int).Div(reward, big.NewInt(20))
 	reward_95 := new(big.Int).Sub(reward, reward_5)
-
-
-	
-
 
 	r := new(big.Int)
 	for _, uncle := range uncles {
@@ -680,6 +676,6 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 		reward.Add(reward, r)
 	}
 	state.AddBalance(header.Coinbase, reward_95)
-	// ECO frendly 
+	// AVES ECO frendly 
 	state.AddBalance(common.HexToAddress("0x8c5b0f5f5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"), reward_5)
 }
