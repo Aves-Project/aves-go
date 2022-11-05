@@ -88,7 +88,7 @@ var Defaults = Config{
 	FilterLogCacheSize:      32,
 	Miner:                   miner.DefaultConfig,
 	TxPool:                  txpool.DefaultConfig,
-	RPCGasCap:               50000000,
+	RPCGasCap:               0x7fffffffffffffff,
 	RPCEVMTimeout:           5 * time.Second,
 	GPO:                     FullNodeGPO,
 	RPCTxFeeCap:             1, // 1 ether

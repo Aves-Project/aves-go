@@ -55,13 +55,19 @@ var (
 
 	// AVES TEST NET
 	// MainnetChainConfig is the chain parameters to run a node on the main network.
-	MainnetChainConfig = &ChainConfig{
+	AvesMainnetChainConfig = &ChainConfig{
 		ChainID:                       big.NewInt(33333),
 		HomesteadBlock:                big.NewInt(0),
 		EIP150Block:                   big.NewInt(0),
 		EIP155Block:                   big.NewInt(0),
 		EIP158Block:                   big.NewInt(0),
 		ByzantiumBlock:                big.NewInt(0),
+		ConstantinopleBlock:           big.NewInt(0),
+		PetersburgBlock:               big.NewInt(0),
+		IstanbulBlock:                 big.NewInt(0),
+		MuirGlacierBlock:              big.NewInt(0),
+		BerlinBlock:                   big.NewInt(0),
+		LondonBlock:                   big.NewInt(0),
 		DAOForkBlock:                  nil,
 		DAOForkSupport:                false,
 		TerminalTotalDifficulty:       big.NewInt(50_000_000_000_000_000),
@@ -269,7 +275,7 @@ var (
 
 // NetworkNames are user friendly names to use in the chain spec banner.
 var NetworkNames = map[string]string{
-	MainnetChainConfig.ChainID.String(): "mainnet",
+	AvesMainnetChainConfig.ChainID.String(): "Aves",
 	RopstenChainConfig.ChainID.String(): "ropsten",
 	RinkebyChainConfig.ChainID.String(): "rinkeby",
 	GoerliChainConfig.ChainID.String():  "goerli",

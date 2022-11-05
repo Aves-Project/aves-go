@@ -97,7 +97,7 @@ func TestPeerSubscription(t *testing.T) {
 
 type fakeChain struct{}
 
-func (f *fakeChain) Config() *params.ChainConfig { return params.MainnetChainConfig }
+func (f *fakeChain) Config() *params.ChainConfig { return params.AvesMainnetChainConfig }
 func (f *fakeChain) Genesis() *types.Block {
 	return core.DefaultGenesisBlock().ToBlock()
 }

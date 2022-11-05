@@ -426,7 +426,7 @@ func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
 	case g != nil:
 		return g.Config
 	case ghash == params.MainnetGenesisHash:
-		return params.MainnetChainConfig
+		return params.AvesMainnetChainConfig
 	case ghash == params.RopstenGenesisHash:
 		return params.RopstenChainConfig
 	case ghash == params.SepoliaGenesisHash:
@@ -526,7 +526,7 @@ func (g *Genesis) MustCommit(db ethdb.Database) *types.Block {
 // AVES GENESIS
 func DefaultGenesisBlock() *Genesis {
 	return &Genesis{
-		Config:     params.MainnetChainConfig,
+		Config:     params.AvesMainnetChainConfig,
 		Nonce:      0,
 		GasLimit:   0x7fffffffffffffff,
 		Difficulty: big.NewInt(0),
