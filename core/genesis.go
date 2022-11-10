@@ -530,7 +530,7 @@ func DefaultGenesisBlock() *Genesis {
 		Nonce:      0,
 		GasLimit:   0x7fffffffffffffff,
 		Difficulty: big.NewInt(0),
-		// addr 0xd9c9cd5f6779558b6e0ed4e6acf6b1947e7fa1f3
+		// addr 0xfecB46A4C9bB7a227E32207E045fFF0e77Ca378a premine, for testing will use mine
 		Alloc: map[common.Address]GenesisAccount{								// 2 milion AVES / aves 18 digits
 			common.HexToAddress("0xB0061ACb424DB252D52a9E97B90824300855885E"): {Balance: new(big.Int).Mul(big.NewInt(20000000), big.NewInt(1e18))},
 		},

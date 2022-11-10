@@ -51,7 +51,7 @@ var CheckpointOracles = map[common.Hash]*CheckpointOracleConfig{
 }
 
 var (
-	MainnetTerminalTotalDifficulty, _ = new(big.Int).SetString("50_000_000_000_000_000", 10)
+
 
 	// AVES TEST NET
 	// MainnetChainConfig is the chain parameters to run a node on the main network.
@@ -70,7 +70,7 @@ var (
 		LondonBlock:                   big.NewInt(0),
 		DAOForkBlock:                  nil,
 		DAOForkSupport:                false,
-		TerminalTotalDifficulty:       big.NewInt(50_000_000_000_000_000),
+		TerminalTotalDifficulty:       nil,
 		TerminalTotalDifficultyPassed: false,
 		Ethash:                        new(EthashConfig),
 
@@ -108,7 +108,7 @@ var (
 		MuirGlacierBlock:              big.NewInt(7_117_117),
 		BerlinBlock:                   big.NewInt(9_812_189),
 		LondonBlock:                   big.NewInt(10_499_401),
-		TerminalTotalDifficulty:       new(big.Int).SetUint64(50_000_000_000_000_000),
+		TerminalTotalDifficulty:       nil,
 		TerminalTotalDifficultyPassed: true,
 		Ethash:                        new(EthashConfig),
 	}
