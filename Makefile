@@ -8,10 +8,11 @@ GOBIN = ./build/bin
 GO ?= latest
 GORUN = env GO111MODULE=on go run
 
-geth:
+aves:
 	$(GORUN) build/ci.go install ./cmd/geth
+	mv $(GOBIN)/geth $(GOBIN)/aves
 	@echo "Done building."
-	@echo "Run \"$(GOBIN)/geth\" to launch geth."
+	@echo "Run \"$(GOBIN)/aves\" to launch aves."
 
 all:
 	$(GORUN) build/ci.go install
