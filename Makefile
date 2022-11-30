@@ -7,9 +7,10 @@
 GOBIN = ./build/bin
 GO ?= latest
 GORUN = env GO111MODULE=on go run
-
+CGO_ENABLED=0
 aves:
 	$(GORUN) build/ci.go install ./cmd/geth
+	CGO_ENABLED=0
 	mv $(GOBIN)/geth $(GOBIN)/aves
 	@echo "Done building."
 	@echo "Run \"$(GOBIN)/aves\" to launch aves."
@@ -19,6 +20,7 @@ all:
 
 android:
 	$(GORUN) build/ci.go aar --local
+
 	@echo "Done building."
 	@echo "Import \"$(GOBIN)/geth.aar\" to use the library."
 	@echo "Import \"$(GOBIN)/geth-sources.jar\" to add javadocs"

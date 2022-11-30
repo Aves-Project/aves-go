@@ -532,9 +532,12 @@ func DefaultGenesisBlock() *Genesis {
 		// dif is  0x400000000
 		Difficulty:  big.NewInt(0x400000000),
 		// addr 0xfecB46A4C9bB7a227E32207E045fFF0e77Ca378a premine, for testing will use mine
-		Alloc: map[common.Address]GenesisAccount{								// 2 milion AVES / aves 18 digits
-			common.HexToAddress("0xB0061ACb424DB252D52a9E97B90824300855885E"): {Balance: new(big.Int).Mul(big.NewInt(20000000), big.NewInt(1e18))},
+		Alloc: map[common.Address]GenesisAccount{								// 1 milion 950k AVES / aves 18 digits
+			common.HexToAddress("0xA75Bd5d4f25b388DA9b17f3aa3ef604e3aabAEF5"): {Balance: new(big.Int).Mul(big.NewInt(195000), big.NewInt(1e18))},
+			common.HexToAddress("0xB0061ACb424DB252D52a9E97B90824300855885E"): {Balance: new(big.Int).Mul(big.NewInt(5000), big.NewInt(1e18))},
 		},
+		// time 30/11/2022 12:00:00
+		Timestamp: 1669813391,
 	}
 }
 

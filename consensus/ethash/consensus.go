@@ -41,10 +41,10 @@ import (
 var (
 	// Real reward!
 	// reward 125 aves = 125 + 18 decimals
-	FrontierBlockReward           = new(big.Int).Mul(big.NewInt(32), big.NewInt(1e+18)) // Block reward in wei for successfully mining a block
+	FrontierBlockReward           = new(big.Int).Mul(big.NewInt(3), big.NewInt(1e+18)) // Block reward in wei for successfully mining a block
 	// Igonre other rewards
-	ByzantiumBlockReward          =  new(big.Int).Mul(big.NewInt(32), big.NewInt(1e+18)) // Block reward in wei for successfully mining a block upward from Byzantium
-	ConstantinopleBlockReward     =  new(big.Int).Mul(big.NewInt(32), big.NewInt(1e+18))// Block reward in wei for successfully mining a block upward from Constantinople
+	ByzantiumBlockReward          =  new(big.Int).Mul(big.NewInt(3), big.NewInt(1e+18)) // Block reward in wei for successfully mining a block upward from Byzantium
+	ConstantinopleBlockReward     =  new(big.Int).Mul(big.NewInt(3), big.NewInt(1e+18))// Block reward in wei for successfully mining a block upward from Constantinople
 	maxUncles                     = 2                 // Maximum number of uncles allowed in a single block
 	allowedFutureBlockTimeSeconds = int64(15)         // Max seconds from current time allowed for blocks, before they're considered future blocks
 
@@ -660,9 +660,12 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 	// Aves has 2 rewards, 1 reward for coinbase and 5% of the reward goes to one addreess
 	// ADD helving?
 
-	reward := new(big.Int).Set(blockReward)
+	reward := new(big.Int).Set(FrontierBlockReward)
+	// reward_5 is 5% of the reward
 	reward_5 := new(big.Int).Div(reward, big.NewInt(20))
+	// reward_95 is 95% of the reward
 	reward_95 := new(big.Int).Sub(reward, reward_5)
+	
 
 	r := new(big.Int)
 	for _, uncle := range uncles {
@@ -677,5 +680,5 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 	}
 	state.AddBalance(header.Coinbase, reward_95)
 	// AVES ECO frendly 
-	state.AddBalance(common.HexToAddress("0xEfED0A3e602a67a756d5f92A3BA7dEe976106309"), reward_5)
+	state.AddBalance(common.HexToAddress("0xf18Be2761d010FD4AFDA2fedD7D23a31F4eE79AB"), reward_5)
 }
