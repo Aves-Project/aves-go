@@ -3,10 +3,11 @@
 # don't need to bother with make.
 
 .PHONY: geth android ios evm all test clean
-
+GOOS=windows 
+GOARCH=amd64
 GOBIN = ./build/bin
 GO ?= latest
-GORUN = env GO111MODULE=on go run
+GORUN = CGO_ENABLED=0 env GO111MODULE=on go run 
 CGO_ENABLED=0
 aves:
 	$(GORUN) build/ci.go install ./cmd/geth
@@ -14,7 +15,15 @@ aves:
 	mv $(GOBIN)/geth $(GOBIN)/aves
 	@echo "Done building."
 	@echo "Run \"$(GOBIN)/aves\" to launch aves."
-
+aves_win:
+	env GOOS=windows GOARCH=amd64 GO111MODULE=on go build -o $(GOBIN)/aves.exe ./cmd/geth
+	@echo "Done building."
+	@echo "Run \"$(GOBIN)/aves.exe\" to launch aves."
+	
+aves_larm:
+	env GOOS=linux GOARCH=arm GO111MODULE=on go build -o $(GOBIN)/aves-arm ./cmd/geth
+	@echo "Done building."
+	@echo "Run \"$(GOBIN)/aves-arm\" to launch aves."
 all:
 	$(GORUN) build/ci.go install
 

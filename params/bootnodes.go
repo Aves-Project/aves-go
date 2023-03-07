@@ -21,7 +21,7 @@ import "github.com/ethereum/go-ethereum/common"
 // MainnetBootnodes are the enode URLs of the P2P bootstrap nodes running on
 // the main Ethereum network.
 var MainnetBootnodes = []string{
-	"enode://5238902e121b8ee9bedee191403443510251fe0dd010f8a7e287366b2bb008dea210eca32d1c8730b28a46c92c1725dbcce740b873665e7a6f353c525d666183@195.231.86.211:30303",  
+	"enode://57ff4a3b6a40e5d930b524185587088e0d413977797d9a994f46a7ad2945a577425c91e948af4ad488c2a1e52e34a6ec7d746cc29a0e9b61c99dabeb69a0add5@195.231.86.211:30303",  
 }
 
 
