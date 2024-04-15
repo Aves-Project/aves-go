@@ -21,7 +21,7 @@ Building `geth` requires both a Go (version 1.16 or later) and a C compiler. You
 them using your favourite package manager. Once the dependencies are installed, run
 
 ```shell
-make geth
+make aves
 ```
 
 or, to build the full suite of utilities:
@@ -36,14 +36,14 @@ Minimum:
 
 * CPU with 2+ cores
 * 4GB RAM
-* 1TB free storage space to sync the Mainnet
+* 40 GB free storage space to sync the Mainnet
 * 8 MBit/sec download Internet service
 
 Recommended:
 
 * Fast CPU with 4+ cores
 * 16GB+ RAM
-* High-performance SSD with at least 1TB of free space
+* High-performance SSD with at least 80 GB of free space
 * 25+ MBit/sec download Internet service
 
 
