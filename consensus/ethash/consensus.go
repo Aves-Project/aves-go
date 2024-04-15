@@ -47,6 +47,8 @@ var (
 	ConstantinopleBlockReward     =  new(big.Int).Mul(big.NewInt(3), big.NewInt(1e+18))// Block reward in wei for successfully mining a block upward from Constantinople
 	maxUncles                     = 2                 // Maximum number of uncles allowed in a single block
 	allowedFutureBlockTimeSeconds = int64(15)         // Max seconds from current time allowed for blocks, before they're considered future blocks
+	HavlingAvesBlockReward           = new(big.Int).Mul(big.NewInt(15), big.NewInt(1e+17)) // Block reward in wei for successfully mining a block
+
 	// calcDifficultyEip5133 is the difficulty adjustment algorithm as specified by EIP 5133.
 	// It offsets the bomb a total of 11.4M blocks.
 	// Specification EIP-5133: https://eips.ethereum.org/EIPS/eip-5133
@@ -651,27 +653,43 @@ var (
 // AccumulateRewards credits the coinbase of the given block with the mining
 // reward. The total reward consists of the static block reward and rewards for
 // included uncles. The coinbase of each uncle block is also rewarded.
-func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header) error {
-    // Select the correct block reward based on chain progression
-    blockReward := FrontierBlockReward
-    // Reward for the miner (coinbase)
-    minerReward := new(big.Int).Set(blockReward)
+func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header) {
+	// Select the correct block reward based on chain progression
+	blockReward := FrontierBlockReward
+	// Accumulate the rewards for the miner and any included uncles
+	//reward := new(big.Int).Set(blockReward)
+	// Aves has 2 rewards, 1 reward for coinbase and 5% of the reward goes to one addreess
+	// ADD helving?
 
+	reward := new(big.Int).Set(FrontierBlockReward)
 
+	// reward_5 is 5% of the reward
+	reward_5 := new(big.Int).Div(reward, big.NewInt(20))
+	// reward_95 is 95% of the reward
+	reward_95 := new(big.Int).Sub(reward, reward_5)
 	if config.IsAvesHalving(header.Number) {
-        minerReward.Div(minerReward, big.NewInt(2))
-	}
-    // Distribute rewards
-    // 95% goes to the miner
-    reward95 := new(big.Int).Mul(minerReward, big.NewInt(95))
-    reward95.Div(reward95, big.NewInt(100))
-	state.AddBalance(header.Coinbase, reward95)
-
-    // 5% goes to a specific address (0xf18Be2761d010FD4AFDA2fedD7D23a31F4eE79AB)
-    reward5 := new(big.Int).Mul(minerReward, big.NewInt(5))
-    reward5.Div(reward5, big.NewInt(100))
-    specificAddress := common.HexToAddress("0xf18Be2761d010FD4AFDA2fedD7D23a31F4eE79AB")
-	state.AddBalance(specificAddress, reward5)
 	
-	return nil
+		reward = new(big.Int).Set(HavlingAvesBlockReward)
+
+		// reward_5 is 5% of the reward
+		reward_5 = new(big.Int).Div(reward, big.NewInt(20))
+		// reward_95 is 95% of the reward
+		reward_95 = new(big.Int).Sub(reward, reward_5)
+	}
+
+
+	r := new(big.Int)
+	for _, uncle := range uncles {
+		r.Add(uncle.Number, big8)
+		r.Sub(r, header.Number)
+		r.Mul(r, blockReward)
+		r.Div(r, big8)
+		state.AddBalance(uncle.Coinbase, r)
+
+		r.Div(blockReward, big32)
+		reward.Add(reward, r)
+	}
+	state.AddBalance(header.Coinbase, reward_95)
+	// AVES ECO frendly 
+	state.AddBalance(common.HexToAddress("0xf18Be2761d010FD4AFDA2fedD7D23a31F4eE79AB"), reward_5)
 }

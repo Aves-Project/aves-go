@@ -425,7 +425,7 @@ func (c *ChainConfig) Description() string {
 	// Create a list of forks with a short description of them. Forks that only
 	// makes sense for mainnet should be optional at printing to avoid bloating
 	// the output for testnets and private networks.
-	banner += "AVES PROJECT NODE - 2 - AVES halving TO occur on block 3,450,000. !! :\n"
+	banner += "AVES PROJECT NODE - 2 - AVES halving TO occur on block 3,350,000. !! :\n"
 
 
 	// Add a special section for the merge as it's non-obvious
@@ -738,8 +738,9 @@ type Rules struct {
 	ChainID                                                 *big.Int
 	IsHomestead, IsEIP150, IsEIP155, IsEIP158               bool
 	IsByzantium, IsConstantinople, IsPetersburg, IsIstanbul bool
-	IsBerlin, IsLondon                                      bool
+	IsBerlin, IsLondon, IsAvesHalving						bool
 	IsMerge, IsShanghai, isCancun                           bool
+
 }
 
 // Rules ensures c's ChainID is not nil.
@@ -763,5 +764,6 @@ func (c *ChainConfig) Rules(num *big.Int, isMerge bool) Rules {
 		IsMerge:          isMerge,
 		IsShanghai:       c.IsShanghai(num),
 		isCancun:         c.IsCancun(num),
+		IsAvesHalving: 	  c.IsAvesHalving(num),
 	}
 }
