@@ -69,6 +69,8 @@ var (
 		BerlinBlock:                   big.NewInt(0),
 		LondonBlock:                   big.NewInt(0),
 		AvesHalvingBlock:			   big.NewInt(3350000),
+		AvesHalvingBlockV2:			   big.NewInt(5000000),
+
 		DAOForkBlock:                  nil,
 		DAOForkSupport:                false,
 		TerminalTotalDifficulty:       nil,
@@ -260,17 +262,17 @@ var (
 	//
 	// This configuration is intentionally not using keyed fields to force anyone
 	// adding flags to the config to also have to set these fields.
-	AllEthashProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0),big.NewInt(0), nil, nil, nil, nil, false, new(EthashConfig), nil}
+	AllEthashProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0),big.NewInt(0),big.NewInt(0), nil, nil, nil, nil, false, new(EthashConfig), nil}
 
 	// AllCliqueProtocolChanges contains every protocol change (EIPs) introduced
 	// and accepted by the Ethereum core developers into the Clique consensus.
 	//
 	// This configuration is intentionally not using keyed fields to force anyone
 	// adding flags to the config to also have to set these fields.
-	AllCliqueProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), nil, nil, nil, nil, nil, nil, false, nil, &CliqueConfig{Period: 0, Epoch: 30000}}
+	AllCliqueProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0),big.NewInt(0), nil, nil, nil, nil, nil, nil, false, nil, &CliqueConfig{Period: 0, Epoch: 30000}}
 
-	TestChainConfig    = &ChainConfig{big.NewInt(1), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0),big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), nil, nil, nil, nil, false, new(EthashConfig), nil}
-	NonActivatedConfig = &ChainConfig{big.NewInt(1), nil, nil, false, nil, common.Hash{}, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,nil, nil, nil, nil, nil, false, new(EthashConfig), nil}
+	TestChainConfig    = &ChainConfig{big.NewInt(1), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0),big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0),big.NewInt(0), nil, nil, nil, nil, false, new(EthashConfig), nil}
+	NonActivatedConfig = &ChainConfig{big.NewInt(1), nil, nil, false, nil, common.Hash{}, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,nil, nil, nil,nil, nil, nil, false, new(EthashConfig), nil}
 	TestRules          = TestChainConfig.Rules(new(big.Int), false)
 )
 
@@ -364,6 +366,7 @@ type ChainConfig struct {
 	ShanghaiBlock       *big.Int `json:"shanghaiBlock,omitempty"`       // Shanghai switch block (nil = no fork, 0 = already on shanghai)
 	CancunBlock         *big.Int `json:"cancunBlock,omitempty"`         // Cancun switch block (nil = no fork, 0 = already on cancun)
 	AvesHalvingBlock           *big.Int `json:"AvesHalvingBlock,omitempty"`
+	AvesHalvingBlockV2           *big.Int `json:"AvesHalvingBlockV2,omitempty"`
 
 	// TerminalTotalDifficulty is the amount of total difficulty reached by
 	// the network that triggers the consensus upgrade.
@@ -425,7 +428,7 @@ func (c *ChainConfig) Description() string {
 	// Create a list of forks with a short description of them. Forks that only
 	// makes sense for mainnet should be optional at printing to avoid bloating
 	// the output for testnets and private networks.
-	banner += "AVES PROJECT NODE - 2 - AVES halving TO occur on block 3,350,000. !! :\n"
+	banner += "AVES PROJECT NODE - major version *3* - AVES halvingV2 TO **START** on block 5,000,000. !! :\n"
 
 
 	// Add a special section for the merge as it's non-obvious
@@ -578,6 +581,8 @@ func (c *ChainConfig) CheckConfigForkOrder() error {
 		{name: "shanghaiBlock", block: c.ShanghaiBlock, optional: true},
 		{name: "cancunBlock", block: c.CancunBlock, optional: true},
 		{name: "AvesHalvingBlock", block: c.AvesHalvingBlock },
+		{name: "AvesHalvingBlockV2", block: c.AvesHalvingBlockV2 },
+
 
 	} {
 		if lastFork.name != "" {
@@ -631,6 +636,9 @@ func (c *ChainConfig) checkCompatible(newcfg *ChainConfig, head *big.Int) *Confi
 	}
 	if isForkIncompatible(c.AvesHalvingBlock, newcfg.AvesHalvingBlock, head) {
 		return newCompatError("AvesHalvingBlock fork block", c.AvesHalvingBlock, newcfg.AvesHalvingBlock)
+	}
+	if isForkIncompatible(c.AvesHalvingBlockV2, newcfg.AvesHalvingBlockV2, head) {
+		return newCompatError("AvesHalvingBlockV2 fork block", c.AvesHalvingBlockV2, newcfg.AvesHalvingBlockV2)
 	}
 	if isForkIncompatible(c.PetersburgBlock, newcfg.PetersburgBlock, head) {
 		// the only case where we allow Petersburg to be set in the past is if it is equal to Constantinople
@@ -723,6 +731,9 @@ func newCompatError(what string, storedblock, newblock *big.Int) *ConfigCompatEr
 func (c *ChainConfig) IsAvesHalving(num *big.Int) bool {
 	return isForked(c.AvesHalvingBlock, num)
 }
+func (c *ChainConfig) IsAvesHalvingV2(num *big.Int) bool {
+	return isForked(c.AvesHalvingBlockV2, num)
+}
 
 
 func (err *ConfigCompatError) Error() string {
@@ -738,7 +749,7 @@ type Rules struct {
 	ChainID                                                 *big.Int
 	IsHomestead, IsEIP150, IsEIP155, IsEIP158               bool
 	IsByzantium, IsConstantinople, IsPetersburg, IsIstanbul bool
-	IsBerlin, IsLondon, IsAvesHalving						bool
+	IsBerlin, IsLondon, IsAvesHalving, IsAvesHalvingV2						bool
 	IsMerge, IsShanghai, isCancun                           bool
 
 }
@@ -765,5 +776,7 @@ func (c *ChainConfig) Rules(num *big.Int, isMerge bool) Rules {
 		IsShanghai:       c.IsShanghai(num),
 		isCancun:         c.IsCancun(num),
 		IsAvesHalving: 	  c.IsAvesHalving(num),
+		IsAvesHalvingV2: 	  c.IsAvesHalvingV2(num),
+
 	}
 }

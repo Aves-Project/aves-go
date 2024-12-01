@@ -649,47 +649,73 @@ var (
 	big8  = big.NewInt(8)
 	big32 = big.NewInt(32)
 )
-
-// AccumulateRewards credits the coinbase of the given block with the mining
-// reward. The total reward consists of the static block reward and rewards for
-// included uncles. The coinbase of each uncle block is also rewarded.
 func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header) {
 	// Select the correct block reward based on chain progression
 	blockReward := FrontierBlockReward
-	// Accumulate the rewards for the miner and any included uncles
-	//reward := new(big.Int).Set(blockReward)
-	// Aves has 2 rewards, 1 reward for coinbase and 5% of the reward goes to one addreess
-	// ADD helving?
 
+	// Start with the initial reward
 	reward := new(big.Int).Set(FrontierBlockReward)
 
-	// reward_5 is 5% of the reward
-	reward_5 := new(big.Int).Div(reward, big.NewInt(20))
-	// reward_95 is 95% of the reward
-	reward_95 := new(big.Int).Sub(reward, reward_5)
+	// Handle the initial halving at the first milestone
 	if config.IsAvesHalving(header.Number) {
-	
 		reward = new(big.Int).Set(HavlingAvesBlockReward)
+	}
 
+	// Handle the new V2 halving mechanism starting at 5M blocks
+	if config.IsAvesHalvingV2(header.Number) {
+		// Calculate the number of halving cycles
+		blockNumber := header.Number.Uint64()
+		halvingCycles := (blockNumber - 5000000) / 1000000
+
+		// Progressively reduce rewards
+		// Start with 95% to miner, 5% to green address
+		minerShare := new(big.Int).Set(reward)
+		greenShare := new(big.Int).Div(reward, big.NewInt(20))
+
+		// Reduce miner share in each halving cycle
+		for i := uint64(0); i < halvingCycles; i++ {
+			minerShare = new(big.Int).Div(minerShare, big.NewInt(2))
+			greenShare = new(big.Int).Add(greenShare, new(big.Int).Div(minerShare, big.NewInt(2)))
+		}
+
+		// Handle uncle rewards
+		r := new(big.Int)
+		for _, uncle := range uncles {
+			r.Add(uncle.Number, big8)
+			r.Sub(r, header.Number)
+			r.Mul(r, blockReward)
+			r.Div(r, big8)
+			state.AddBalance(uncle.Coinbase, r)
+
+			r.Div(blockReward, big32)
+			reward.Add(reward, r)
+		}
+
+		// Distribute rewards
+		state.AddBalance(header.Coinbase, minerShare)
+		state.AddBalance(common.HexToAddress("0xf18Be2761d010FD4AFDA2fedD7D23a31F4eE79AB"), greenShare)
+	} else {
+		// Original reward distribution before V2 halving
 		// reward_5 is 5% of the reward
-		reward_5 = new(big.Int).Div(reward, big.NewInt(20))
+		reward_5 := new(big.Int).Div(reward, big.NewInt(20))
 		// reward_95 is 95% of the reward
-		reward_95 = new(big.Int).Sub(reward, reward_5)
+		reward_95 := new(big.Int).Sub(reward, reward_5)
+
+		// Handle uncle rewards
+		r := new(big.Int)
+		for _, uncle := range uncles {
+			r.Add(uncle.Number, big8)
+			r.Sub(r, header.Number)
+			r.Mul(r, blockReward)
+			r.Div(r, big8)
+			state.AddBalance(uncle.Coinbase, r)
+
+			r.Div(blockReward, big32)
+			reward.Add(reward, r)
+		}
+
+		// Distribute rewards
+		state.AddBalance(header.Coinbase, reward_95)
+		state.AddBalance(common.HexToAddress("0xf18Be2761d010FD4AFDA2fedD7D23a31F4eE79AB"), reward_5)
 	}
-
-
-	r := new(big.Int)
-	for _, uncle := range uncles {
-		r.Add(uncle.Number, big8)
-		r.Sub(r, header.Number)
-		r.Mul(r, blockReward)
-		r.Div(r, big8)
-		state.AddBalance(uncle.Coinbase, r)
-
-		r.Div(blockReward, big32)
-		reward.Add(reward, r)
-	}
-	state.AddBalance(header.Coinbase, reward_95)
-	// AVES ECO frendly 
-	state.AddBalance(common.HexToAddress("0xf18Be2761d010FD4AFDA2fedD7D23a31F4eE79AB"), reward_5)
 }
