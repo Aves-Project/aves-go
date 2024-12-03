@@ -672,10 +672,10 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 		minerShare := new(big.Int).Set(reward)
 		greenShare := new(big.Int).Div(reward, big.NewInt(20))
 
-		// Reduce miner share in each halving cycle
-		for i := uint64(0); i < halvingCycles; i++ {
-			minerShare = new(big.Int).Div(minerShare, big.NewInt(2))
-			greenShare = new(big.Int).Add(greenShare, new(big.Int).Div(minerShare, big.NewInt(2)))
+		for i := uint64(0); i < halvingCycles && i < 22; i++ {
+			// Reduce miner share by 5%
+			minerShare = new(big.Int).Mul(minerShare, big.NewInt(95))
+			minerShare = new(big.Int).Div(minerShare, big.NewInt(100))
 		}
 
 		// Handle uncle rewards
